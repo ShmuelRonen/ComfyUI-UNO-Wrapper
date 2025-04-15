@@ -30,7 +30,7 @@ Most models will be installed automatically, but you must manually download the 
 #### Download Link: 
 - [bytedance-research/UNO](https://huggingface.co/bytedance-research/UNO)
 
-### Important Note: Flux Model Access
+### 3. Important Note: Flux Model Access
 
 The UNO-FLUX implementation automatically attempts to download model files from Hugging Face repositories. If you encounter authorization errors, please:
 
