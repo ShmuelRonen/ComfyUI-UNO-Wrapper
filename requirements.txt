@@ -1,0 +1,4 @@
+einops
+huggingface-hub
+sentencepiece
+
