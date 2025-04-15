@@ -30,6 +30,21 @@ Most models will be installed automatically, but you must manually download the 
 #### Download Link: 
 - [bytedance-research/UNO](https://huggingface.co/bytedance-research/UNO)
 
+### Important Note: Flux Model Access
+
+The UNO-FLUX implementation automatically attempts to download model files from Hugging Face repositories. If you encounter authorization errors, please:
+
+1. Visit the Flux model page on Hugging Face:
+   https://huggingface.co/black-forest-labs/FLUX.1-dev
+
+2. Sign in to your Hugging Face account
+
+3. Accept any terms of use for the model (if required)
+
+4. Once authorized, return to ComfyUI and try again - the download should now work properly
+
+This one-time authorization will allow the automatic downloads to work correctly.
+
 ## Usage
 
 ### Basic Workflow
