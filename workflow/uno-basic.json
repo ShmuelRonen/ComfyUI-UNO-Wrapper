@@ -1,0 +1,271 @@
+{
+  "id": "df6b6fb4-bcf1-4e17-b3cc-72c2e75f7f5e",
+  "revision": 0,
+  "last_node_id": 6,
+  "last_link_id": 7,
+  "nodes": [
+    {
+      "id": 6,
+      "type": "UNOModelLoader",
+      "pos": [
+        -776.494140625,
+        183.0186004638672
+      ],
+      "size": [
+        315,
+        154
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "UNO_PIPELINE",
+          "type": "UNO_PIPELINE",
+          "links": [
+            7
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UNOModelLoader"
+      },
+      "widgets_values": [
+        "flux-dev-fp8",
+        "cuda",
+        true,
+        512
+      ]
+    },
+    {
+      "id": 3,
+      "type": "PreviewImage",
+      "pos": [
+        414.2557373046875,
+        277.7222900390625
+      ],
+      "size": [
+        433.52496337890625,
+        465.5685729980469
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 2
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.27",
+        "Node name for S&R": "PreviewImage"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 4,
+      "type": "LoadImage",
+      "pos": [
+        -433.320556640625,
+        546.42529296875
+      ],
+      "size": [
+        315,
+        314
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            3,
+            4,
+            6
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.27",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "ComfyUI_temp_yfqsr_00016_.png",
+        "image",
+        ""
+      ]
+    },
+    {
+      "id": 5,
+      "type": "LoadImage",
+      "pos": [
+        -773.0950927734375,
+        426.07073974609375
+      ],
+      "size": [
+        315,
+        314
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            5
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.27",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "ComfyUI_temp_yfqsr_00017_.png",
+        "image",
+        ""
+      ]
+    },
+    {
+      "id": 2,
+      "type": "UNOImageGenerator",
+      "pos": [
+        -57.721858978271484,
+        280.3915710449219
+      ],
+      "size": [
+        417.4073791503906,
+        428.47601318359375
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "pipeline",
+          "type": "UNO_PIPELINE",
+          "link": 7
+        },
+        {
+          "name": "image_ref1",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 5
+        },
+        {
+          "name": "image_ref2",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 6
+        },
+        {
+          "name": "image_ref3",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 4
+        },
+        {
+          "name": "image_ref4",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            2
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UNOImageGenerator"
+      },
+      "widgets_values": [
+        "a woman ware a neckless in her wedding",
+        512,
+        768,
+        4,
+        25,
+        1931,
+        "randomize",
+        1
+      ]
+    }
+  ],
+  "links": [
+    [
+      2,
+      2,
+      0,
+      3,
+      0,
+      "IMAGE"
+    ],
+    [
+      5,
+      5,
+      0,
+      2,
+      1,
+      "IMAGE"
+    ],
+    [
+      6,
+      4,
+      0,
+      2,
+      2,
+      "IMAGE"
+    ],
+    [
+      7,
+      6,
+      0,
+      2,
+      0,
+      "UNO_PIPELINE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.9646149645000006,
+      "offset": [
+        1119.1057384391731,
+        -5.005553323267871
+      ]
+    },
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0,
+    "VHS_MetadataImage": true,
+    "VHS_KeepIntermediate": true
+  },
+  "version": 0.4
+}
