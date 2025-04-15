@@ -79,4 +79,6 @@ UNO-FLUX's standout feature is its ability to incorporate elements from multiple
 
 ## License
 
+### Based on UNO ByteDance project: https://github.com/bytedance/UNO
+
 This project follows the same license as UNO-FLUX (Apache License 2.0)
