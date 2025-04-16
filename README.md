@@ -1,8 +1,12 @@
 # ComfyUI-UNO-Wrapper
 
-This extension integrates ByteDance's UNO-FLUX model into ComfyUI, allowing you to use UNO's powerful text-to-image generation with reference capabilities.
+This extension integrates ByteDance's UNO-FLUX model into ComfyUI, allowing you to use UNO's powerful text-to-image generation with reference capabilities. The wrapper now supports adding custom user LoRAs to enhance your generations with different styles, aesthetics, and concepts from your existing LoRA collection.
 
 ![view](https://github.com/user-attachments/assets/d69881e8-36f9-44ac-b2b6-673536ece186)
+
+### A user_lora example with Japanise womans LoRA
+![image](https://github.com/user-attachments/assets/4aa26a72-1e53-4ada-bc6a-67b991b381eb)
+
 
 ## Features
 
@@ -10,6 +14,7 @@ This extension integrates ByteDance's UNO-FLUX model into ComfyUI, allowing you 
 - Full control over guidance scale, steps, and dimensions
 - Batch generation support
 - Leverages your existing ComfyUI text encoders
+- **NEW: Support for applying custom LoRAs from your models/loras directory**
 
 ## Installation
 
@@ -62,6 +67,7 @@ The UNO-FLUX implementation automatically attempts to download model files from 
 
 1. Add a "UNO Model Loader" node
    - Configure device settings if needed (most settings work with defaults)
+   - **NEW: Select a custom LoRA from the dropdown to influence the generation style**
 
 2. Connect it to a "UNO Image Generator" node
    - Enter your text prompt
@@ -79,6 +85,19 @@ UNO-FLUX's standout feature is its ability to incorporate elements from multiple
 2. Each reference image will influence different aspects of the generated output
 3. Use a descriptive prompt to guide how the references are combined
 
+
+### Using Custom LoRAs
+
+With the new user LoRA support, you can now apply any LoRA from your ComfyUI installation:
+
+1. Place your LoRA files (.safetensors, .pt, .pth, or .ckpt) in your ComfyUI's `models/loras` directory
+2. In the UNO Model Loader node, select the desired LoRA from the "user_lora" dropdown
+3. Adjust the "lora_strength" slider to control how strongly the LoRA affects the generated images
+   - 0.0 = No effect from the LoRA
+   - 1.0 = Maximum effect from the LoRA
+
+This allows you to combine UNO's powerful reference-based generation with custom styles from your LoRA collection.
+
 ![teaser](https://github.com/user-attachments/assets/c1a4d514-35ed-4208-bc81-ec26298dd8c5)
 
 
@@ -88,6 +107,7 @@ UNO-FLUX's standout feature is its ability to incorporate elements from multiple
 - **CUDA Errors**: Try enabling offload in the UNO Model Loader
 - **Poor Results**: Try adjusting the guidance scale (higher for more prompt adherence, lower for more creativity)
 - **Download Errors**: Check your Hugging Face token in the config.json file is correct and has proper permissions
+- **LoRA Not Working**: Ensure your LoRA files are in the correct format and located in the `models/loras` directory
 
 ## License
 
