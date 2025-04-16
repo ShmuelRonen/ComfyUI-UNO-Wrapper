@@ -10,7 +10,6 @@ import traceback
 MODELS_DIR = folder_paths.models_dir
 UNET_MODELS_DIR = os.path.join(MODELS_DIR, "unet")  # Flux models directly in unet directory
 LORA_MODELS_DIR = os.path.join(MODELS_DIR, "loras", "uno_lora")  # UNO LoRA in loras/uno_lora
-USER_LORA_DIR = os.path.join(MODELS_DIR, "loras")  # User LoRAs in loras directory
 TEXT_ENCODERS_DIR = os.path.join(MODELS_DIR, "text_encoders")  # Text encoders directory
 
 # Create the LoRA directory if it doesn't exist
@@ -61,9 +60,7 @@ class UNOModelLoader:
                 "device": (["cuda", "cpu"], {"default": "cuda" if torch.cuda.is_available() else "cpu"}),
                 "offload": ("BOOLEAN", {"default": True}),
                 "lora_rank": ("INT", {"default": 512, "min": 1, "max": 1024}),
-                # Add the user_lora option
-                "user_lora": (cls.get_available_loras(), {"default": "None"}),
-                "lora_strength": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.05}),
+                # Removed the use_existing_text_encoder option from here
             }
         }
     
@@ -71,37 +68,7 @@ class UNOModelLoader:
     FUNCTION = "load_model"
     CATEGORY = "UNO"
 
-    @classmethod
-    def get_available_loras(cls):
-        """Get list of available LoRA files in the loras directory"""
-        loras = ["None"]  # Start with "None" as the first option
-        
-        try:
-            # Use ComfyUI's built-in folder_paths to find loras
-            if hasattr(folder_paths, "get_filename_list"):
-                lora_filenames = folder_paths.get_filename_list("loras")
-                for filename in lora_filenames:
-                    # Only include files with standard extensions
-                    if filename.endswith(('.safetensors', '.pt', '.pth', '.ckpt')):
-                        # Get filename without extension
-                        name = os.path.splitext(filename)[0]
-                        if name not in loras:  # Avoid duplicates with different extensions
-                            loras.append(name)
-            else:
-                # Fallback method if folder_paths doesn't have the method
-                if os.path.exists(USER_LORA_DIR):
-                    for file in os.listdir(USER_LORA_DIR):
-                        if file.endswith('.safetensors') or file.endswith('.pt') or file.endswith('.pth') or file.endswith('.ckpt'):
-                            # Add the file without extension
-                            name = os.path.splitext(file)[0]
-                            if name not in loras:  # Avoid duplicates with different extensions
-                                loras.append(name)
-        except Exception as e:
-            print(f"Error loading LoRA list: {e}")
-        
-        return loras
-
-    def load_model(self, model_name, device, offload, lora_rank, user_lora, lora_strength):
+    def load_model(self, model_name, device, offload, lora_rank):  # Removed the parameter
         # Check if UNO-FLUX is properly imported
         if not UNO_IMPORTED:
             raise RuntimeError(
@@ -121,6 +88,7 @@ class UNOModelLoader:
         os.environ["UNO_LORA_PATH"] = lora_model_path
         
         # Always use existing text encoders
+        use_existing_text_encoder = True  # Hardcoded to True
         os.environ["UNO_TEXT_ENCODER_PATH"] = TEXT_ENCODERS_DIR
         print(f"Using existing text encoders from: {TEXT_ENCODERS_DIR}")
         
@@ -143,57 +111,6 @@ class UNOModelLoader:
             
             if hasattr(pipeline, "set_lora_path"):
                 pipeline.set_lora_path(lora_model_path)
-            
-            # NEW: Apply user LoRA if selected and not "None"
-            if user_lora != "None":
-                user_lora_path = None
-                
-                # Try to find the user LoRA file
-                if hasattr(folder_paths, "get_full_path"):
-                    for ext in ['.safetensors', '.pt', '.pth', '.ckpt']:
-                        try:
-                            potential_path = folder_paths.get_full_path("loras", f"{user_lora}{ext}")
-                            if potential_path and os.path.exists(potential_path):
-                                user_lora_path = potential_path
-                                print(f"Found user LoRA: {user_lora_path}")
-                                break
-                        except:
-                            continue
-                
-                # Fallback to manual search
-                if user_lora_path is None:
-                    for ext in ['.safetensors', '.pt', '.pth', '.ckpt']:
-                        potential_path = os.path.join(USER_LORA_DIR, f"{user_lora}{ext}")
-                        if os.path.exists(potential_path):
-                            user_lora_path = potential_path
-                            print(f"Found user LoRA via manual search: {user_lora_path}")
-                            break
-                
-                # If we found a LoRA file, try to apply it
-                if user_lora_path:
-                    try:
-                        # Try different methods that might be available
-                        if hasattr(pipeline, "load_additional_lora"):
-                            pipeline.load_additional_lora(user_lora_path, weight=lora_strength)
-                            print(f"Applied user LoRA with load_additional_lora()")
-                        elif hasattr(pipeline, "apply_lora"):
-                            pipeline.apply_lora(user_lora_path, scale=lora_strength)
-                            print(f"Applied user LoRA with apply_lora()")
-                        elif hasattr(pipeline, "load_lora"):
-                            pipeline.load_lora(user_lora_path, alpha=lora_strength)
-                            print(f"Applied user LoRA with load_lora()")
-                        else:
-                            print(f"Warning: Unable to apply user LoRA - no suitable method found")
-                    except Exception as e:
-                        print(f"Error applying user LoRA: {e}")
-                else:
-                    print(f"Warning: Selected user LoRA '{user_lora}' not found")
-            
-            # Store user lora info for reference
-            pipeline.user_lora_info = {
-                "name": user_lora,
-                "strength": lora_strength
-            }
             
             return (pipeline,)
         except Exception as e:
@@ -248,11 +165,12 @@ class UNOImageGenerator:
     CATEGORY = "UNO"
 
     def generate(self, pipeline, prompt, width, height, guidance_scale, num_inference_steps, 
-                 seed, batch_size, image_ref1=None, image_ref2=None, image_ref3=None, image_ref4=None):
+                 seed, batch_size, image_ref1=None, image_ref2=None, image_ref3=None, image_ref4=None): # Added batch_size here
         
         # --- Input Reference Image Processing (Same as before) ---
         ref_images = []
         for ref_img_input in [image_ref1, image_ref2, image_ref3, image_ref4]:
+            # (Keep the corrected input processing logic from the previous response here)
             if ref_img_input is not None:
                 if isinstance(ref_img_input, torch.Tensor):
                     if ref_img_input.dim() == 4 and ref_img_input.shape[0] == 1:
@@ -262,23 +180,22 @@ class UNOImageGenerator:
                         img_np = img_tensor_uint8.cpu().numpy()
                         try:
                            ref_images.append(Image.fromarray(img_np))
+                           # print(f"Successfully converted input tensor {ref_img_input.shape} to PIL Image.") # Optional print
                         except Exception as e:
                            print(f"Error converting input NumPy array (shape: {img_np.shape}, dtype: {img_np.dtype}) to PIL Image: {e}")
                            ref_images.append(None)
                     else:
+                        # print(f"Warning: Received unexpected tensor shape {ref_img_input.shape} for reference image. Skipping conversion.") # Optional print
                         ref_images.append(None) 
                 elif isinstance(ref_img_input, Image.Image):
                      ref_images.append(ref_img_input)
+                     # print("Received input reference image as PIL Image.") # Optional print
                 else:
+                     # print(f"Warning: Received unexpected type {type(ref_img_input)} for reference image. Skipping.") # Optional print
                      ref_images.append(None)
             else:
                 ref_images.append(None)
-        valid_ref_images = ref_images
-
-        # NEW: Log if user LoRA is being used
-        if hasattr(pipeline, "user_lora_info") and pipeline.user_lora_info["name"] != "None":
-            lora_info = pipeline.user_lora_info
-            print(f"Generating with user LoRA: {lora_info['name']} (strength: {lora_info['strength']})")
+        valid_ref_images = ref_images # Assuming pipeline handles None inputs
 
         # --- Start: Batch Loop Logic ---
         output_images = [] # List to collect generated image tensors
@@ -306,6 +223,8 @@ class UNOImageGenerator:
                     image_prompt4=valid_ref_images[3]
                 )
                 
+                # print(f"  Image type received from pipeline: {type(image)}") # Optional print
+                
                 # --- Output Image Processing (applied to each image in loop) ---
                 if isinstance(image, Image.Image):
                     img_array = np.array(image).astype(np.uint8)
@@ -316,7 +235,7 @@ class UNOImageGenerator:
                         img_array = np.stack((img_array,)*3, axis=-1)
                     
                     if img_array.shape[0] != height or img_array.shape[1] != width:
-                         pil_img_resized = image.resize((width, height), Image.LANCZOS)
+                         pil_img_resized = image.resize((width, height), Image.Resampling.LANCZOS)
                          img_array = np.array(pil_img_resized).astype(np.uint8)
                          if img_array.ndim == 3 and img_array.shape[-1] == 4:
                              img_array = img_array[:, :, :3]
