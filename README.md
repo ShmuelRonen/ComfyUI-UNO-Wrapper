@@ -1,11 +1,8 @@
 # ComfyUI-UNO-Wrapper
 
-This extension integrates ByteDance's UNO-FLUX model into ComfyUI, allowing you to use UNO's powerful text-to-image generation with reference capabilities. The wrapper now supports adding custom user LoRAs to enhance your generations with different styles, aesthetics, and concepts from your existing LoRA collection.
+This extension integrates ByteDance's UNO-FLUX model into ComfyUI, allowing you to use UNO's powerful text-to-image generation with reference capabilities.
 
 ![view](https://github.com/user-attachments/assets/d69881e8-36f9-44ac-b2b6-673536ece186)
-
-### A user_lora example with Japanise womans LoRA
-![image](https://github.com/user-attachments/assets/4aa26a72-1e53-4ada-bc6a-67b991b381eb)
 
 
 ## Features
@@ -85,18 +82,6 @@ UNO-FLUX's standout feature is its ability to incorporate elements from multiple
 2. Each reference image will influence different aspects of the generated output
 3. Use a descriptive prompt to guide how the references are combined
 
-
-### Using Custom LoRAs
-
-With the new user LoRA support, you can now apply any LoRA from your ComfyUI installation:
-
-1. Place your LoRA files (.safetensors, .pt, .pth, or .ckpt) in your ComfyUI's `models/loras` directory
-2. In the UNO Model Loader node, select the desired LoRA from the "user_lora" dropdown
-3. Adjust the "lora_strength" slider to control how strongly the LoRA affects the generated images
-   - 0.0 = No effect from the LoRA
-   - 1.0 = Maximum effect from the LoRA
-
-This allows you to combine UNO's powerful reference-based generation with custom styles from your LoRA collection.
 
 ![teaser](https://github.com/user-attachments/assets/c1a4d514-35ed-4208-bc81-ec26298dd8c5)
 
