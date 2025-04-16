@@ -47,20 +47,6 @@ The UNO-FLUX implementation automatically attempts to download model files from 
 
 3. Restart ComfyUI for the changes to take effect
 
-#### Option 2: Manual Authorization
-
-If you prefer not to use a token:
-
-1. Visit the Flux model page on Hugging Face:
-   https://huggingface.co/black-forest-labs/FLUX.1-dev
-
-2. Sign in to your Hugging Face account
-
-3. Accept any terms of use for the model (if required)
-
-4. Once authorized, return to ComfyUI and try again - the download should now work properly
-
-This one-time authorization will allow the automatic downloads to work correctly.
 
 #### Getting a Hugging Face Token
 
