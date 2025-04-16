@@ -30,9 +30,26 @@ Most models will be installed automatically, but you must manually download the 
 #### Download Link: 
 - [bytedance-research/UNO](https://huggingface.co/bytedance-research/UNO)
 
-### 3. Important Note: Flux Model Access
+### 3. Hugging Face Authentication Setup
 
-The UNO-FLUX implementation automatically attempts to download model files from Hugging Face repositories. If you encounter authorization errors, please:
+The UNO-FLUX implementation automatically attempts to download model files from Hugging Face repositories. For private or gated models, you'll need to set up authentication:
+
+#### Option 1: Using config.json (Recommended)
+
+1. Create a file named `config.json` in the `ComfyUI/custom_nodes/ComfyUI-UNO-Wrapper` directory
+2. Add the following content, replacing with your actual Hugging Face token:
+
+```json
+{
+    "hf_token": "your_huggingface_token_here"
+}
+```
+
+3. Restart ComfyUI for the changes to take effect
+
+#### Option 2: Manual Authorization
+
+If you prefer not to use a token:
 
 1. Visit the Flux model page on Hugging Face:
    https://huggingface.co/black-forest-labs/FLUX.1-dev
@@ -44,6 +61,14 @@ The UNO-FLUX implementation automatically attempts to download model files from 
 4. Once authorized, return to ComfyUI and try again - the download should now work properly
 
 This one-time authorization will allow the automatic downloads to work correctly.
+
+#### Getting a Hugging Face Token
+
+1. Visit [Hugging Face](https://huggingface.co/) and create an account or log in
+2. Go to your profile settings
+3. Navigate to "Access Tokens"
+4. Create a new token with "read" permissions
+5. Copy the token and paste it into your `config.json` file
 
 ## Usage
 
@@ -76,6 +101,7 @@ UNO-FLUX's standout feature is its ability to incorporate elements from multiple
 - **Generation Fails**: Make sure you've downloaded the LoRA model to `models/loras/uno_lora/dit_lora.safetensors`
 - **CUDA Errors**: Try enabling offload in the UNO Model Loader
 - **Poor Results**: Try adjusting the guidance scale (higher for more prompt adherence, lower for more creativity)
+- **Download Errors**: Check your Hugging Face token in the config.json file is correct and has proper permissions
 
 ## License
 
