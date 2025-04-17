@@ -64,8 +64,7 @@ The UNO-FLUX implementation automatically attempts to download model files from 
 
 1. Add a "UNO Model Loader" node
    - Configure device settings if needed (most settings work with defaults)
-   - **NEW: Select a custom LoRA from the dropdown to influence the generation style**
-
+ 
 2. Connect it to a "UNO Image Generator" node
    - Enter your text prompt
    - Set dimensions, guidance scale, and steps as desired
