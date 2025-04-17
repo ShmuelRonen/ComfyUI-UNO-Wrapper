@@ -11,7 +11,7 @@ This extension integrates ByteDance's UNO-FLUX model into ComfyUI, allowing you 
 - Full control over guidance scale, steps, and dimensions
 - Batch generation support
 - Leverages your existing ComfyUI text encoders
-- **NEW: Support for applying custom LoRAs from your models/loras directory**
+
 
 ## Installation
 
